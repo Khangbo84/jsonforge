@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { MenuBar } from "./ui/layout/MenuBar";
 import { StatusBar } from "./ui/layout/StatusBar";
 import { DockLayout, DockId, DockNode } from "./ui/layout/DockLayout";
+import { TabLayout } from "./ui/layout/TabLayout";
 import { ToolboxPanel } from "./ui/panels/ToolboxPanel";
 import { HierarchyPanel } from "./ui/panels/HierarchyPanel";
 import { CanvasPanel } from "./ui/panels/CanvasPanel";
@@ -16,6 +17,7 @@ import { AboutModal } from "./ui/modals/AboutModal";
 import { ExportAddonModal } from "./ui/modals/ExportAddonModal";
 import { WelcomeScreen } from "./ui/welcome/WelcomeScreen";
 import { useServiceSync } from "./hooks/useServices";
+import { useIsMobile } from "./hooks/useWindowSize";
 import { Container } from "./core/di/Container";
 import { ProjectService } from "./core/services/ProjectService";
 import { HistoryService } from "./core/services/HistoryService";
@@ -67,6 +69,7 @@ const DEFAULT_LAYOUT: DockNode = {
 export function App() {
   useServiceSync();
 
+  const isMobile = useIsMobile(768);
   const refresh = useProjectStore(s => s.refreshFromServices);
   const deleteSelected = useProjectStore(s => s.deleteSelected);
   const duplicateSelected = useProjectStore(s => s.duplicateSelected);
@@ -285,7 +288,11 @@ export function App() {
         onCloseProject={() => Container.resolve<ProjectService>(ProjectService.NAME).close()}
       />
       <div className="jf-app__body">
-        <DockLayout panels={panels} initial={layout ?? DEFAULT_LAYOUT} onChange={setLayout} />
+        {isMobile ? (
+          <TabLayout panels={panels} />
+        ) : (
+          <DockLayout panels={panels} initial={layout ?? DEFAULT_LAYOUT} onChange={setLayout} />
+        )}
       </div>
       <StatusBar />
       <NewProjectModal open={showNewProject} onClose={() => setShowNewProject(false)} />
