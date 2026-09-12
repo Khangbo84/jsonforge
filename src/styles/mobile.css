@@ -1,0 +1,96 @@
+/* Mobile-first responsive styles */
+
+/* Tab Layout - Mobile view */
+.jf-tab-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: var(--jf-bg-0);
+  overflow: hidden;
+}
+
+.jf-tab-navigation {
+  display: flex;
+  gap: 0;
+  height: 40px;
+  background: var(--jf-bg-1);
+  border-bottom: 1px solid var(--jf-border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-shrink: 0;
+}
+
+.jf-tab-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--jf-text-dim);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.jf-tab-btn:hover {
+  background: var(--jf-bg-2);
+  color: var(--jf-text);
+}
+
+.jf-tab-btn--active {
+  background: var(--jf-bg-2);
+  color: var(--jf-accent);
+  border-bottom-color: var(--jf-accent);
+}
+
+.jf-tab-content {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.jf-tab-pane {
+  position: absolute;
+  inset: 0;
+  display: none;
+  overflow: auto;
+  background: var(--jf-bg-1);
+}
+
+.jf-tab-pane--active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hide tab layout on desktop */
+@media (min-width: 769px) {
+  .jf-tab-layout {
+    display: none;
+  }
+
+  .jf-mosaic {
+    display: block;
+  }
+}
+
+/* Ensure tab layout takes full space on mobile */
+@media (max-width: 768px) {
+  .jf-mosaic {
+    display: none;
+  }
+
+  .jf-tab-layout {
+    display: flex;
+  }
+
+  .jf-panel {
+    overflow: auto;
+  }
+}
