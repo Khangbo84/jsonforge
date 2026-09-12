@@ -1,3 +1,4 @@
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { ReactNode } from "react";
 import { DockId } from "./DockLayout";
 
@@ -6,9 +7,16 @@ export interface TabLayoutProps {
 }
 
 export function TabLayout({ panels }: TabLayoutProps) {
-  const [activeTab, setActiveTab] = (window as any).__mobileTabState || ["canvas", () => {}];
+  const [activeTab, setActiveTab] = useState<DockId>("canvas");
 
-  const panelIds: DockId[] = ["toolbox", "hierarchy", "canvas", "properties", "textures", "bindings", "json"];
+  const panelIds: DockId[] = useMemo(
+    () => ["toolbox", "hierarchy", "canvas", "properties", "textures", "bindings", "json"],
+    []
+  );
+
+  const handleTabChange = useCallback((tabId: DockId) => {
+    setActiveTab(tabId);
+  }, []);
 
   return (
     <div className="jf-tab-layout">
@@ -18,10 +26,8 @@ export function TabLayout({ panels }: TabLayoutProps) {
           <button
             key={id}
             className={`jf-tab-btn ${activeTab === id ? "jf-tab-btn--active" : ""}`}
-            onClick={() => {
-              (window as any).__mobileTabState = [id, (window as any).__mobileTabState?.[1]];
-              window.dispatchEvent(new CustomEvent("mobile-tab-change", { detail: id }));
-            }}
+            onClick={() => handleTabChange(id)}
+            aria-selected={activeTab === id}
           >
             {panels[id].title}
           </button>
@@ -34,6 +40,8 @@ export function TabLayout({ panels }: TabLayoutProps) {
           <div
             key={id}
             className={`jf-tab-pane ${activeTab === id ? "jf-tab-pane--active" : ""}`}
+            role="tabpanel"
+            aria-hidden={activeTab !== id}
           >
             {panels[id].content}
           </div>
